@@ -3,11 +3,11 @@ services:
   front:
     container_name: shopping-cart-front
     build:
-      context: ./shopping-cart-fgql
+      context: ./shopping-cart-front
       dockerfile: Dockerfile
     command: npm run start
     volumes:
-      - './shopping-cart-fgql:/app'
+      - './shopping-cart-front:/app'
       - '/app/node_modules'
     links:
       - api
@@ -21,11 +21,11 @@ services:
   api:
     container_name: shopping-cart-api
     build:
-      context: ./shopping-cart-gql
+      context: ./shopping-cart-back
       dockerfile: Dockerfile
     command: npm run start
     volumes:
-      - './shopping-cart-gql:/app'
+      - './shopping-cart-back:/app'
       - '/app/node_modules'
     depends_on:
       - mongo
@@ -40,6 +40,7 @@ services:
 
   mongo:
     image: mongo:latest
+    container_name: shopping-cart-db
     restart: always
     ports:
       - "27017:27017"   
