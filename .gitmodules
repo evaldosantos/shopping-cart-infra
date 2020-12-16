@@ -1,0 +1,6 @@
+[submodule "shopping-cart-front"]
+	path = shopping-cart-front
+	url = git@github.com:evaldosantos/shopping-cart-front.git
+[submodule "shopping-cart-back"]
+	path = shopping-cart-back
+	url = git@github.com:evaldosantos/shopping-cart-back.git
