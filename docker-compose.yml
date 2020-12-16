@@ -1,0 +1,61 @@
+version: '3.7'
+services:
+  front:
+    container_name: shopping-cart-front
+    build:
+      context: ./shopping-cart-fgql
+      dockerfile: Dockerfile
+    command: npm run start
+    volumes:
+      - './shopping-cart-fgql:/app'
+      - '/app/node_modules'
+    links:
+      - api
+    ports:
+      - '3001:3000'
+    environment:
+      - REACT_APP_GRAPHQL_URI=http://localhost:4001/graphql
+    networks:
+      - webapp
+  
+  api:
+    container_name: shopping-cart-api
+    build:
+      context: ./shopping-cart-gql
+      dockerfile: Dockerfile
+    command: npm run start
+    volumes:
+      - './shopping-cart-gql:/app'
+      - '/app/node_modules'
+    depends_on:
+      - mongo
+    ports:
+      - '4001:4000'
+    links:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo/shopping-cart?retryWrites=true&w=majority
+    networks:
+      - webapp
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"   
+    networks:
+      - webapp
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - 8081:8081
+    networks:
+      - webapp
+
+networks:
+  webapp:
+    driver: bridge
